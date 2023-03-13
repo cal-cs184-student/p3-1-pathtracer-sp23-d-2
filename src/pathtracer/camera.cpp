@@ -189,12 +189,12 @@ void Camera::load_settings(string filename) {
  */
 Ray Camera::generate_ray(double x, double y) const {
 
-
-    double xTransform = x * tan(.5 * hFov) + (x - 1) * tan(.5 * hFov);
-    double yTransform = y * tan(.5 * vFov) + (y - 1) * tan(.5 * vFov);
+    double xTransform = x * tan(.5 * radians(hFov)) + (x - 1) * tan(.5 * radians(hFov));
+    double yTransform = y * tan(.5 * radians(vFov)) + (y - 1) * tan(.5 * radians(vFov));
 
     Vector3D direction = Vector3D(xTransform, yTransform, -1);
-    direction = direction / direction.norm();
+    direction = c2w * direction;
+    direction.normalize();
 
     Ray cameraRay = Ray(pos, direction);
     cameraRay.min_t = Vector3D(xTransform, yTransform, nClip).norm();
