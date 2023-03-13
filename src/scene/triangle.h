@@ -34,7 +34,9 @@ public:
      */
     BBox get_bbox() const;
 
+    bool in_triangle(const Vector3D p) const;
 
+    Vector3D barycentric_coordinate(const Vector3D p) const;
 
     /**
      * Ray - Triangle intersection.
