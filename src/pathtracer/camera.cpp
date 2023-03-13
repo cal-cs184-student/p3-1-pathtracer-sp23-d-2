@@ -197,8 +197,8 @@ Ray Camera::generate_ray(double x, double y) const {
     direction.normalize();
 
     Ray cameraRay = Ray(pos, direction);
-    cameraRay.min_t = Vector3D(xTransform, yTransform, nClip).norm();
-    cameraRay.max_t = Vector3D(xTransform, yTransform, fClip).norm();
+    cameraRay.min_t = nClip;
+    cameraRay.max_t = fClip;
 
     return cameraRay;
 

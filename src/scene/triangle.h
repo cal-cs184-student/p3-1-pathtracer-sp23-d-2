@@ -16,69 +16,71 @@ namespace CGL { namespace SceneObjects {
 class Triangle : public Primitive {
 public:
 
-  /**
-   * Constructor.
-   * Construct a mesh triangle with the given indicies into the triangle mesh.
-   * \param mesh pointer to the mesh the triangle is in
-   * \param v1 index of triangle vertex in the mesh's attribute arrays
-   * \param v2 index of triangle vertex in the mesh's attribute arrays
-   * \param v3 index of triangle vertex in the mesh's attribute arrays
-   */
-  Triangle(const Mesh* mesh, size_t v1, size_t v2, size_t v3);
+    /**
+     * Constructor.
+     * Construct a mesh triangle with the given indicies into the triangle mesh.
+     * \param mesh pointer to the mesh the triangle is in
+     * \param v1 index of triangle vertex in the mesh's attribute arrays
+     * \param v2 index of triangle vertex in the mesh's attribute arrays
+     * \param v3 index of triangle vertex in the mesh's attribute arrays
+     */
+    Triangle(const Mesh* mesh, size_t v1, size_t v2, size_t v3);
 
-  Triangle() {};
+    Triangle() {};
 
-  /**
-   * Get the world space bounding box of the triangle.
-   * \return world space bounding box of the triangle
-   */
-  BBox get_bbox() const;
+    /**
+     * Get the world space bounding box of the triangle.
+     * \return world space bounding box of the triangle
+     */
+    BBox get_bbox() const;
 
-  /**
-   * Ray - Triangle intersection.
-   * Check if the given ray intersects with the triangle, no intersection
-   * information is stored.
-   * \param r ray to test intersection with
-   * \return true if the given ray intersects with the triangle,
-             false otherwise
-   */
-  bool has_intersection(const Ray& r) const;
 
-  /**
-   * Ray - Triangle intersection 2.
-   * Check if the given ray intersects with the triangle, if so, the input
-   * intersection data is updated to contain intersection information for the
-   * point of intersection.
-   * \param r ray to test intersection with
-   * \param i address to store intersection info
-   * \return true if the given ray intersects with the triangle,
-             false otherwise
-   */
-  bool intersect(const Ray& r, Intersection* i) const;
 
-  /**
-   * Get BSDF.
-   * In the case of a triangle, the surface material BSDF is stored in 
-   * the mesh it belongs to. 
-   */
-  BSDF* get_bsdf() const { return bsdf; }
+    /**
+     * Ray - Triangle intersection.
+     * Check if the given ray intersects with the triangle, no intersection
+     * information is stored.
+     * \param r ray to test intersection with
+     * \return true if the given ray intersects with the triangle,
+     false otherwise
+     */
+    bool has_intersection(const Ray& r) const;
 
-  /**
-   * Draw with OpenGL (for visualizer)
-   */
-  void draw(const Color& c, float alpha) const;
+    /**
+     * Ray - Triangle intersection 2.
+     * Check if the given ray intersects with the triangle, if so, the input
+     * intersection data is updated to contain intersection information for the
+     * point of intersection.
+     * \param r ray to test intersection with
+     * \param i address to store intersection info
+     * \return true if the given ray intersects with the triangle,
+     false otherwise
+     */
+    bool intersect(const Ray& r, Intersection* i) const;
 
-  /**
-   * Draw outline with OpenGL (for visualizer)
-   */
-  void drawOutline(const Color& c, float alpha) const;
+    /**
+     * Get BSDF.
+     * In the case of a triangle, the surface material BSDF is stored in
+     * the mesh it belongs to.
+     */
+    BSDF* get_bsdf() const { return bsdf; }
 
-  Vector3D p1, p2, p3;
-  Vector3D n1, n2, n3;
-  
-  BSDF* bsdf;
+    /**
+     * Draw with OpenGL (for visualizer)
+     */
+    void draw(const Color& c, float alpha) const;
 
-  BBox bbox;
+    /**
+     * Draw outline with OpenGL (for visualizer)
+     */
+    void drawOutline(const Color& c, float alpha) const;
+
+    Vector3D p1, p2, p3;
+    Vector3D n1, n2, n3;
+
+    BSDF* bsdf;
+
+    BBox bbox;
 }; // class Triangle
 
 } // namespace SceneObjects
