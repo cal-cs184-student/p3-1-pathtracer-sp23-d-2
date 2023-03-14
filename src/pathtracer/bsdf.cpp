@@ -20,24 +20,24 @@ namespace CGL {
  */
 void make_coord_space(Matrix3x3 &o2w, const Vector3D n) {
 
-  Vector3D z = Vector3D(n.x, n.y, n.z);
-  Vector3D h = z;
-  if (fabs(h.x) <= fabs(h.y) && fabs(h.x) <= fabs(h.z))
-    h.x = 1.0;
-  else if (fabs(h.y) <= fabs(h.x) && fabs(h.y) <= fabs(h.z))
-    h.y = 1.0;
-  else
-    h.z = 1.0;
+    Vector3D z = Vector3D(n.x, n.y, n.z);
+    Vector3D h = z;
+    if (fabs(h.x) <= fabs(h.y) && fabs(h.x) <= fabs(h.z))
+        h.x = 1.0;
+    else if (fabs(h.y) <= fabs(h.x) && fabs(h.y) <= fabs(h.z))
+        h.y = 1.0;
+    else
+        h.z = 1.0;
 
-  z.normalize();
-  Vector3D y = cross(h, z);
-  y.normalize();
-  Vector3D x = cross(z, y);
-  x.normalize();
+    z.normalize();
+    Vector3D y = cross(h, z);
+    y.normalize();
+    Vector3D x = cross(z, y);
+    x.normalize();
 
-  o2w[0] = x;
-  o2w[1] = y;
-  o2w[2] = z;
+    o2w[0] = x;
+    o2w[1] = y;
+    o2w[2] = z;
 }
 
 /**
@@ -50,12 +50,13 @@ void make_coord_space(Matrix3x3 &o2w, const Vector3D n) {
  * \return reflectance in the given incident/outgoing directions
  */
 Vector3D DiffuseBSDF::f(const Vector3D wo, const Vector3D wi) {
-  // TODO (Part 3.1):
-  // This function takes in both wo and wi and returns the evaluation of
-  // the BSDF for those two directions.
+    // TODO (Part 3.1):
+    // This function takes in both wo and wi and returns the evaluation of
+    // the BSDF for those two directions.
 
 
-  return Vector3D(1.0);
+
+    return Vector3D(1.0);
 
 }
 
@@ -63,50 +64,50 @@ Vector3D DiffuseBSDF::f(const Vector3D wo, const Vector3D wi) {
  * Evalutate diffuse lambertian BSDF.
  */
 Vector3D DiffuseBSDF::sample_f(const Vector3D wo, Vector3D *wi, double *pdf) {
-  // TODO (Part 3.1):
-  // This function takes in only wo and provides pointers for wi and pdf,
-  // which should be assigned by this function.
-  // After sampling a value for wi, it returns the evaluation of the BSDF
-  // at (wo, *wi).
-  // You can use the `f` function. The reference solution only takes two lines.
+    // TODO (Part 3.1):
+    // This function takes in only wo and provides pointers for wi and pdf,
+    // which should be assigned by this function.
+    // After sampling a value for wi, it returns the evaluation of the BSDF
+    // at (wo, *wi).
+    // You can use the `f` function. The reference solution only takes two lines.
 
 
-  return Vector3D(1.0);
+    return Vector3D(1.0);
 
 }
 
 void DiffuseBSDF::render_debugger_node()
 {
-  if (ImGui::TreeNode(this, "Diffuse BSDF"))
-  {
-    DragDouble3("Reflectance", &reflectance[0], 0.005);
-    ImGui::TreePop();
-  }
+    if (ImGui::TreeNode(this, "Diffuse BSDF"))
+    {
+        DragDouble3("Reflectance", &reflectance[0], 0.005);
+        ImGui::TreePop();
+    }
 }
 
 /**
  * Evalutate Emission BSDF (Light Source)
  */
 Vector3D EmissionBSDF::f(const Vector3D wo, const Vector3D wi) {
-  return Vector3D();
+    return Vector3D();
 }
 
 /**
  * Evalutate Emission BSDF (Light Source)
  */
 Vector3D EmissionBSDF::sample_f(const Vector3D wo, Vector3D *wi, double *pdf) {
-  *pdf = 1.0 / PI;
-  *wi = sampler.get_sample(pdf);
-  return Vector3D();
+    *pdf = 1.0 / PI;
+    *wi = sampler.get_sample(pdf);
+    return Vector3D();
 }
 
 void EmissionBSDF::render_debugger_node()
 {
-  if (ImGui::TreeNode(this, "Emission BSDF"))
-  {
-    DragDouble3("Radiance", &radiance[0], 0.005);
-    ImGui::TreePop();
-  }
+    if (ImGui::TreeNode(this, "Emission BSDF"))
+    {
+        DragDouble3("Radiance", &radiance[0], 0.005);
+        ImGui::TreePop();
+    }
 }
 
 } // namespace CGL
