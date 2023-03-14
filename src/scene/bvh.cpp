@@ -58,57 +58,55 @@ BVHNode *BVHAccel::construct_bvh(std::vector<Primitive *>::iterator start,
     // single leaf node (which is also the root) that encloses all the
     // primitives.
 
-
     BBox bbox;
-
-
-  for (auto p = start; p != end; p++) {
-    BBox bb = (*p)->get_bbox();
-    bbox.expand(bb);
-  }
-  
-  BVHNode *node = new BVHNode(bbox);
-  node->start = start;
-  node->end = end;
-
-  // If there are no more than max_leaf_size primitives in the list, the node we just created is a leaf node and we should update its start and end iterators appropriately.
-  size_t size = distance(start, end);
-  if (size <= max_leaf_size) {
-    return node;
-  }
-  
-  // split along axis
-  Vector3D bboxExtent = bbox.extent;
-  int splitAxis = 0;
-  
-  // Find longest axis for split
-  if (bboxExtent.x > bboxExtent.y && bboxExtent.x > bboxExtent.z) {
-      splitAxis = bboxExtent[0];
-    } else if (bboxExtent.y > bboxExtent.x && bboxExtent.y > bboxExtent.z) {
-      splitAxis = bboxExtent[1];
-    } else {
-      splitAxis = bboxExtent[2];
+    for (auto p = start; p != end; p++) {
+        BBox bb = (*p)->get_bbox();
+        bbox.expand(bb);
     }
 
-  // find split point - midpoint of longest axis
-  int splitPoint = floor((bbox.min[splitAxis] + bbox.max[splitAxis])/2);
+    BVHNode *node = new BVHNode(bbox);
+    node->start = start;
+    node->end = end;
+    node->l = NULL;
+    node->r = NULL;
 
-  // split primitives into "left" and "right" collections based on split point
-  auto partitionPoint = std::partition(start, end, [splitAxis, splitPoint](Primitive *p) {
-    Vector3D bbCenter = p->get_bbox().centroid();
-    return splitPoint > bbCenter[splitAxis];
-  });
-  
-  // if the midpoint is either at the start or end, return current node as leaf node
-  // prevents infinite loop
-  if (start == partitionPoint || end == partitionPoint) {
+    // If there are no more than max_leaf_size primitives in the list, the node we just created is a leaf node and we should update its start and end iterators appropriately.
+    size_t size = distance(start, end);
+    if (size <= max_leaf_size)
+        return node;
+
+    // Split along axis
+    Vector3D bboxExtent = bbox.extent;
+    int splitAxis = 0;
+
+    // Find longest axis for split
+    if (bboxExtent.x > bboxExtent.y && bboxExtent.x > bboxExtent.z) {
+        splitAxis = 0;
+    } else if (bboxExtent.y > bboxExtent.x && bboxExtent.y > bboxExtent.z) {
+        splitAxis = 1;
+    } else {
+        splitAxis = 2;
+    }
+
+    // Use midpoint of longest axis as split point
+    double splitPoint = (bbox.min[splitAxis] + bbox.max[splitAxis]) / 2;
+    auto partitionPoint = partition(start, end, [splitAxis, splitPoint](Primitive *p) {
+        Vector3D bbCenter = p->get_bbox().centroid();
+        return splitPoint > bbCenter[splitAxis];
+    });
+
+    if (start == partitionPoint || end == partitionPoint)
+        return node;
+
+    vector<Primitive *> *rVector = new vector<Primitive *>;
+    copy(partitionPoint, end, back_inserter(*rVector));
+    node->r = construct_bvh(rVector->begin(), rVector->end(), max_leaf_size);
+
+    vector<Primitive *> *lVector = new vector<Primitive *>;
+    copy(start, partitionPoint, back_inserter(*lVector));
+    node->l = construct_bvh(lVector->begin(), lVector->end(), max_leaf_size);
+
     return node;
-  }
-  
-  // update right and left of current node
-  node->r = construct_bvh(partitionPoint, end, max_leaf_size);
-  node->l = construct_bvh(start, partitionPoint, max_leaf_size);
-  return node;
 }
 
 bool BVHAccel::has_intersection(const Ray &ray, BVHNode *node) const {
@@ -118,32 +116,47 @@ bool BVHAccel::has_intersection(const Ray &ray, BVHNode *node) const {
     // Intersection version cannot, since it returns as soon as it finds
     // a hit, it doesn't actually have to find the closest hit.
 
+    double t0, t1;
+    if (!node->bb.intersect(ray, t0, t1))
+        return false;
 
+    if (t0 > ray.max_t || t1 < ray.min_t)
+        return false;
 
-    for (auto p : primitives) {
-        total_isects++;
-        if (p->has_intersection(ray))
-            return true;
+    if (node->isLeaf()) {
+        bool hit = false;
+        for (auto p = node->start; p != node->end; p ++) {
+            total_isects++;
+            if ((*p)->has_intersection(ray))
+                return true;
+        }
     }
-    return false;
 
-
+    return has_intersection(ray, node->l) || has_intersection(ray, node->r);
 }
 
 bool BVHAccel::intersect(const Ray &ray, Intersection *i, BVHNode *node) const {
     // TODO (Part 2.3):
     // Fill in the intersect function.
 
+    double t0, t1;
+    if (!node->bb.intersect(ray, t0, t1))
+        return false;
 
+    if (t0 > ray.max_t || t1 < ray.min_t)
+        return false;
 
-    bool hit = false;
-    for (auto p : primitives) {
-        total_isects++;
-        hit = p->intersect(ray, i) || hit;
+    if (node->isLeaf()) {
+        bool hit = false;
+        for (auto p = node->start; p != node->end; p ++) {
+            total_isects++;
+            hit = (*p)->intersect(ray, i) || hit;
+        }
+
+        return hit;
     }
-    return hit;
 
-
+    return intersect(ray, i, node->l) || intersect(ray, i, node->r);
 }
 
 } // namespace SceneObjects

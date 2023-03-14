@@ -22,32 +22,6 @@ Triangle::Triangle(const Mesh *mesh, size_t v1, size_t v2, size_t v3) {
 
 BBox Triangle::get_bbox() const { return bbox; }
 
-bool Triangle::in_triangle(const Vector3D p) const {
-    uint8_t count = 0;
-    Vector3D vertices[] = {p1, p2, p3};
-    for (int k = 0; k < 3; ++k) {
-        Vector3D line = vertices[(k + 1) % 3] - vertices[k];
-        Vector3D p_test_vector = p - vertices[k];
-        if (cross(line, p_test_vector).norm() <= 0)
-            count++;
-    }
-
-    return !count || count == 3;
-}
-
-Vector3D Triangle::barycentric_coordinate(const Vector3D p) const {
-    Vector3D v0 = p2 - p1, v1 = p3 - p1, v2 = p - p1;
-    double d00 = dot(v0, v0);
-    double d01 = dot(v0, v1);
-    double d11 = dot(v1, v1);
-    double d20 = dot(v2, v0);
-    double d21 = dot(v2, v1);
-    double denom = d00 * d11 - d01 * d01;
-    double x = (d11 * d20 - d01 * d21) / denom;
-    double y = (d00 * d21 - d01 * d20) / denom;
-    return Vector3D(x, y, 1. - x - y);
-}
-
 bool Triangle::has_intersection(const Ray &r) const {
     // Part 1, Task 3: implement ray-triangle intersection
     // The difference between this function and the next function is that the next
