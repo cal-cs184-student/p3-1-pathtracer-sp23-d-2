@@ -61,18 +61,54 @@ BVHNode *BVHAccel::construct_bvh(std::vector<Primitive *>::iterator start,
 
     BBox bbox;
 
-    for (auto p = start; p != end; p++) {
-        BBox bb = (*p)->get_bbox();
-        bbox.expand(bb);
+
+  for (auto p = start; p != end; p++) {
+    BBox bb = (*p)->get_bbox();
+    bbox.expand(bb);
+  }
+  
+  BVHNode *node = new BVHNode(bbox);
+  node->start = start;
+  node->end = end;
+
+  // If there are no more than max_leaf_size primitives in the list, the node we just created is a leaf node and we should update its start and end iterators appropriately.
+  size_t size = distance(start, end);
+  if (size <= max_leaf_size) {
+    return node;
+  }
+  
+  // split along axis
+  Vector3D bboxExtent = bbox.extent;
+  int splitAxis = 0;
+  
+  // Find longest axis for split
+  if (bboxExtent.x > bboxExtent.y && bboxExtent.x > bboxExtent.z) {
+      splitAxis = bboxExtent[0];
+    } else if (bboxExtent.y > bboxExtent.x && bboxExtent.y > bboxExtent.z) {
+      splitAxis = bboxExtent[1];
+    } else {
+      splitAxis = bboxExtent[2];
     }
 
-    BVHNode *node = new BVHNode(bbox);
-    node->start = start;
-    node->end = end;
+  // find split point - midpoint of longest axis
+  int splitPoint = floor((bbox.min[splitAxis] + bbox.max[splitAxis])/2);
 
+  // split primitives into "left" and "right" collections based on split point
+  auto partitionPoint = std::partition(start, end, [splitAxis, splitPoint](Primitive *p) {
+    Vector3D bbCenter = p->get_bbox().centroid();
+    return splitPoint > bbCenter[splitAxis];
+  });
+  
+  // if the midpoint is either at the start or end, return current node as leaf node
+  // prevents infinite loop
+  if (start == partitionPoint || end == partitionPoint) {
     return node;
-
-
+  }
+  
+  // update right and left of current node
+  node->r = construct_bvh(partitionPoint, end, max_leaf_size);
+  node->l = construct_bvh(start, partitionPoint, max_leaf_size);
+  return node;
 }
 
 bool BVHAccel::has_intersection(const Ray &ray, BVHNode *node) const {
