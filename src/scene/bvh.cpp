@@ -153,18 +153,17 @@ bool BVHAccel::has_intersection(const Ray &ray, BVHNode *node) const {
     if (!node->bb.intersect(ray, t0, t1))
         return false;
 
-    if (t0 > ray.max_t || t1 < ray.min_t)
-        return false;
-
     if (node->isLeaf()) {
-        bool hit = false;
-        for (auto p = node->start; p != node->end; p ++) {
+        for (auto p = node->start; p != node->end; p++) {
             total_isects++;
             if ((*p)->has_intersection(ray))
                 return true;
         }
+
+        return false;
     }
 
+    // Here we are safe t short circuit
     return has_intersection(ray, node->l) || has_intersection(ray, node->r);
 }
 

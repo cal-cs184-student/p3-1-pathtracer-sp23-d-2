@@ -27,8 +27,28 @@ bool Triangle::has_intersection(const Ray &r) const {
     // The difference between this function and the next function is that the next
     // function records the "intersection" while this function only tests whether
     // there is a intersection.
-    Intersection _;
-    return intersect(r, &_);
+
+    // Möller Trumbore Algorithm
+    Vector3D e1 = p2 - p1;
+    Vector3D e2 = p3 - p1;
+    Vector3D s0 = r.o - p1;
+    Vector3D s1 = cross(r.d, e2);
+    Vector3D s2 = cross(s0, e1);
+
+    Vector3D result = 1 / dot(s1, e1) * Vector3D(dot(s2, e2), dot(s1, s0), dot(s2, r.d));
+
+    double t = result.x;
+    Vector3D coord = Vector3D(1 - result.y - result.z, result.y, result.z);
+
+    if (coord.x < 0 || coord.y < 0 || coord.z < 0) {
+        return false;
+    }
+
+    if (coord.x > 1 || coord.y > 1 || coord.z > 1) {
+        return false;
+    }
+
+    return t >= r.min_t && t <= r.max_t;
 }
 
 bool Triangle::intersect(const Ray &r, Intersection *isect) const {
