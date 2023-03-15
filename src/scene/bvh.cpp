@@ -148,7 +148,7 @@ bool BVHAccel::intersect(const Ray &ray, Intersection *i, BVHNode *node) const {
 
     if (node->isLeaf()) {
         bool hit = false;
-        for (auto p = node->start; p != node->end; p ++) {
+        for (auto p = node->start; p != node->end; p++) {
             total_isects++;
             hit = (*p)->intersect(ray, i) || hit;
         }
