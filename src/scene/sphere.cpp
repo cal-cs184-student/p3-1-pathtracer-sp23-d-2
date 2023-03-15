@@ -26,9 +26,8 @@ bool Sphere::test(const Ray &r, double &t1, double &t2) const {
     t1 = (-b + sqrt(d)) / 2 / a;
     t2 = (-b - sqrt(d)) / 2 / a;
 
-    if (t1 > t2) {
-        d = t1; t1 = t2; t2 = d;
-    }
+    if (t1 > t2)
+        swap(t1, t2);
 
     if (t1 < r.min_t || t2 > r.max_t)
         return false;

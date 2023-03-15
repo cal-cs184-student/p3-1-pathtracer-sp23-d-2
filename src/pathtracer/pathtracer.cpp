@@ -84,7 +84,6 @@ PathTracer::estimate_direct_lighting_hemisphere(const Ray &r,
     }
 
     return L_out / num_samples * PI;
-
 }
 
 Vector3D

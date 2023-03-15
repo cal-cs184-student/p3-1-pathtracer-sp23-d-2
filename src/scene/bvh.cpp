@@ -75,37 +75,70 @@ BVHNode *BVHAccel::construct_bvh(std::vector<Primitive *>::iterator start,
     if (size <= max_leaf_size)
         return node;
 
-    // Split along axis
-    Vector3D bboxExtent = bbox.extent;
-    int splitAxis = 0;
+    double totalArea = accumulate(start, end, 0., [](double acc, const Primitive *rhs) {
+        return acc + rhs->get_bbox().surface_area();
+    });
 
-    // Find longest axis for split
-    if (bboxExtent.x > bboxExtent.y && bboxExtent.x > bboxExtent.z) {
-        splitAxis = 0;
-    } else if (bboxExtent.y > bboxExtent.x && bboxExtent.y > bboxExtent.z) {
-        splitAxis = 1;
-    } else {
-        splitAxis = 2;
+    vector<double> splitAreas = {0., 0., 0.};
+    double axisSplitPoints[] {0., 0., 0.};
+
+    // Assuming the probability of intersection is proportional to the
+    // surface area of the bounding box, we want the split to result in
+    // maximum entropy reduction. Since we are splitting two ways, that
+    // means the probability on each side should be as close to 0.5 as
+    // possible.
+    for (int i = 0; i < 3; i++) {
+        vector<Primitive *> axis;
+        copy(start, end, back_inserter(axis));
+        sort(axis.begin(), axis.end(), [i](Primitive *lhs, Primitive *rhs){
+            double lhsAxisValue = lhs->get_bbox().centroid()[i];
+            double rhsAxisValue = rhs->get_bbox().centroid()[i];
+            if (lhsAxisValue == rhsAxisValue) {
+                return lhs->get_bbox().surface_area() < rhs->get_bbox().surface_area();
+            } else {
+                return lhs->get_bbox().centroid()[i] < rhs->get_bbox().centroid()[i];
+            }
+        });
+
+        splitAreas[i] = -totalArea / 2;
+
+        for (auto p = axis.begin(); p != axis.end(); p++) {
+            splitAreas[i] += (*p)->get_bbox().surface_area();
+            axisSplitPoints[i] = (*p)->get_bbox().centroid()[i];
+            if (splitAreas[i] > 0) {
+                break;
+            }
+        }
     }
 
-    // Use midpoint of longest axis as split point
-    double splitPoint = (bbox.min[splitAxis] + bbox.max[splitAxis]) / 2;
+
+    int splitAxis = (int) (min_element(splitAreas.begin(), splitAreas.end()) - splitAreas.begin());
+    double splitPoint = axisSplitPoints[splitAxis];
+
+    // Find longest axis for split
+//    Vector3D bboxExtent = bbox.extent;
+//    if (bboxExtent.x > bboxExtent.y && bboxExtent.x > bboxExtent.z) {
+//        splitAxis = 0;
+//    } else if (bboxExtent.y > bboxExtent.x && bboxExtent.y > bboxExtent.z) {
+//        splitAxis = 1;
+//    } else {
+//        splitAxis = 2;
+//    }
+//    splitPoint = (bbox.min[splitAxis] + bbox.max[splitAxis]) / 2;
+
     auto partitionPoint = partition(start, end, [splitAxis, splitPoint](Primitive *p) {
         Vector3D bbCenter = p->get_bbox().centroid();
-        return splitPoint > bbCenter[splitAxis];
+        return bbCenter[splitAxis] <= splitPoint;
     });
 
     if (start == partitionPoint || end == partitionPoint)
         return node;
 
-    vector<Primitive *> *rVector = new vector<Primitive *>;
-    copy(partitionPoint, end, back_inserter(*rVector));
-    node->r = construct_bvh(rVector->begin(), rVector->end(), max_leaf_size);
+    node->r = construct_bvh(partitionPoint, end, max_leaf_size);
+    node->l = construct_bvh(start, partitionPoint, max_leaf_size);
 
-    vector<Primitive *> *lVector = new vector<Primitive *>;
-    copy(start, partitionPoint, back_inserter(*lVector));
-    node->l = construct_bvh(lVector->begin(), lVector->end(), max_leaf_size);
-
+    node->start = node->l->start;
+    node->end = node->l->end;
     return node;
 }
 
@@ -143,9 +176,6 @@ bool BVHAccel::intersect(const Ray &ray, Intersection *i, BVHNode *node) const {
     if (!node->bb.intersect(ray, t0, t1))
         return false;
 
-    if (t0 > ray.max_t || t1 < ray.min_t)
-        return false;
-
     if (node->isLeaf()) {
         bool hit = false;
         for (auto p = node->start; p != node->end; p++) {
@@ -156,7 +186,9 @@ bool BVHAccel::intersect(const Ray &ray, Intersection *i, BVHNode *node) const {
         return hit;
     }
 
-    return intersect(ray, i, node->l) || intersect(ray, i, node->r);
+
+    // Use bitwise op to prevent short-circuiting
+    return intersect(ray, i, node->l) | intersect(ray, i, node->r);
 }
 
 } // namespace SceneObjects
