@@ -65,7 +65,6 @@ bool Triangle::intersect(const Ray &r, Intersection *isect) const {
 
     Vector3D result = 1 / dot(s1, e1) * Vector3D(dot(s2, e2), dot(s1, s0), dot(s2, r.d));
 
-    double t = result.x;
     Vector3D coord = Vector3D(1 - result.y - result.z, result.y, result.z);
 
     if (coord.x < 0 || coord.y < 0 || coord.z < 0) {
@@ -76,12 +75,12 @@ bool Triangle::intersect(const Ray &r, Intersection *isect) const {
         return false;
     }
 
-    if (t >= r.min_t && t <= r.max_t) {
-        isect->t = t;
+    if (result.x >= r.min_t && result.x <= r.max_t) {
+        isect->t = result.x;
         isect->n = coord.x * n1 + coord.y * n2 + coord.z * n3;
         isect->primitive = this;
         isect->bsdf = get_bsdf();
-        r.max_t = t;
+        r.max_t = result.x;
 
         return true;
     } else {
