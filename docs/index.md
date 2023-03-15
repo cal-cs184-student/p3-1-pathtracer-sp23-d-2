@@ -4,7 +4,7 @@
 ## Michael Lin, Rachel Lee
  *** 
 ### Overview
-In this project, we generated camera rays by transforming normalized image coordinates from image space to sensors in camera space and then transforming the camera ray into a ray in the world space. We also generated pixel samples and implemented the Möller Trumbore algorithm for calculating ray-triangle intersections.
+In this project, we generated camera rays by transforming normalized image coordinates from image space to sensors in camera space and then transforming the camera ray into a ray in the world space. We also generated pixel samples and implemented the Möller Trumbore algorithm for calculating ray-triangle intersections. Then, using Bounding Volume Heirarchy acceleration we increased the efficiency of the ray-tracing processes by using the bounding box's surface area in our heuristics.
 ### Part 1
 - **Walk through the ray generation and primitive intersection parts of the rendering pipeline.**
   - To generate the ray, we first transform the normalized input coordinates ```(x,y)``` from the world space to camera space by setting ```xTransform``` to ```x * tan(.5 * radians(hFov)) + (x - 1) * tan(.5 * radians(hFov))``` and ```yTransform``` to  ```y * tan(.5 * radians(hFov)) + (x - 1) * tan(.5 * radians(hFov))```. After transforming the coordinates from image space to sensor in camera space, we then transform the ```xTransform``` and ```yTransform``` coordinates into the world space by finding the updated direction and multiplying by the camera-to-world rotation matrix ```c2w```. Then, we create and return a new ```cameraRay``` using the camera position in the world space pos and updated direction vector while also setting the ```min_t``` and ```max_t``` of the ray to be within the bounds of the two clipping planes ```nclip``` and ```fclip```. After generating the ray and pixel samples using ```raytrace_pixel```, we test whether there is an intersection between the triangle and input ray using the Möller Trumbore algorithm and reporting the location of the nearest intersection point. Finally, we check if the found intersection point is within the triangle’s boundaries.
@@ -21,14 +21,27 @@ In this project, we generated camera rays by transforming normalized image coord
 
 ### Part 2
 - **Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.**
-  - In BVHAccel:construct_bvh, we first compute the bounding box from the given vector of primitives using get_bbox() and initialize a new BVHNode with the bounding box. Then, we check to see if the current node is a leaf node by seeing if there are no more than max_leaf_size primitives in the list, and then update the start and end primitive iterators. If the node is an internal node, then we split the primitives into “left” and “right” sections along the longest axis of the bounding box within bbox.extent. After finding the longest axis for the split, we calculate the midpoint of the longest axis as the split point to divide the primitives: 
+  - In ```BVHAccel:construct_bvh```, we first compute the bounding box from the given vector of primitives using ```get_bbox()``` and initialize a new BVHNode with the bounding box. Then, we check to see if the current node is a leaf node by seeing if there are no more than ```max_leaf_size``` primitives in the list, and then update the start and end primitive iterators. If the node is an internal node, then we split the primitives into “left” and “right” sections along the longest axis of the bounding box within bbox.extent. After finding the longest axis for the split and assuming the probability of intersection is proportional to the surface area of the bounding box, we split the result in maximum entropy reduction. Since we are splitting two ways, that means the probability on each side should be as close to 0.5 as possible:
 
 ```
-double splitPoint = (bbox.min[splitAxis] + bbox.max[splitAxis]) / 2;
-auto partitionPoint = partition(start, end, [splitAxis, splitPoint](Primitive *p) {
-        Vector3D bbCenter = p->get_bbox().centroid();
-        return splitPoint > bbCenter[splitAxis];
-    });
+sort(axis.begin(), axis.end(), [i](Primitive *lhs, Primitive *rhs){
+            double lhsAxisValue = lhs->get_bbox().centroid()[i];
+            double rhsAxisValue = rhs->get_bbox().centroid()[i];
+            if (lhsAxisValue == rhsAxisValue) {
+                return lhs->get_bbox().surface_area() < rhs->get_bbox().surface_area();
+            } else {
+                return lhs->get_bbox().centroid()[i] < rhs->get_bbox().centroid()[i];
+            }
+        });
+splitAreas[i] = -totalArea / 2;
+
+for (auto p = axis.begin(); p != axis.end(); p++) {
+    splitAreas[i] += (*p)->get_bbox().surface_area();
+    axisSplitPoints[i] = (*p)->get_bbox().centroid()[i];
+    if (splitAreas[i] > 0) {
+        break;
+    }
+}
 ```
   - If the split point is at the start or end, then we know that all primitives lie on only one side of the split point and can return the current node. Otherwise, we create a new node with updated start and end primitives and recursively call construct_bvh on the new Primitie vector.
 
@@ -41,7 +54,11 @@ auto partitionPoint = partition(start, end, [splitAxis, splitPoint](Primitive *p
     ![CBlucy.png](./images/CBlucy.png)
 
 - **Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.**
-- **Without BVH Acceleration:**
-![without_bvh.png](./images/without_bvh.png)
-- **With BVH Acceleration:**
-![with_bvh.png](./images/with_bvh.png)
+  - **Without BVH Acceleration:**
+  ![without_bvh.png](./images/without_bvh.png)
+  - **With BVH Acceleration:**
+  ![with_bvh.png](./images/with_bvh.png)
+  - Clearly, we can distinguish the difference between the average speed of the million rays/second without BVH acceleration and with BVH acceleration and see that the one processed with BVH acceleration was ~30x faster. The average number of intersection tests per ray also significantly decreased which shows the increased efficiency of the ray-tracing algorithm for identifying which bounding boxes intersect with the ray while also eliminating computation time for rays that do not intersect.
+
+### Part 3
+- **Walk through both implementations of the direct lighting function.**
