@@ -79,41 +79,56 @@ BVHNode *BVHAccel::construct_bvh(std::vector<Primitive *>::iterator start,
         return acc + rhs->get_bbox().surface_area();
     });
 
-    vector<double> splitAreas = {0., 0., 0.};
-    double axisSplitPoints[] {0., 0., 0.};
-
-    // Assuming the probability of intersection is proportional to the
-    // surface area of the bounding box, we want the split to result in
-    // maximum entropy reduction. Since we are splitting two ways, that
-    // means the probability on each side should be as close to 0.5 as
-    // possible.
-    for (int i = 0; i < 3; i++) {
-        vector<Primitive *> axis;
-        copy(start, end, back_inserter(axis));
-        sort(axis.begin(), axis.end(), [i](Primitive *lhs, Primitive *rhs){
-            double lhsAxisValue = lhs->get_bbox().centroid()[i];
-            double rhsAxisValue = rhs->get_bbox().centroid()[i];
-            if (lhsAxisValue == rhsAxisValue) {
-                return lhs->get_bbox().surface_area() < rhs->get_bbox().surface_area();
-            } else {
-                return lhs->get_bbox().centroid()[i] < rhs->get_bbox().centroid()[i];
-            }
-        });
-
-        splitAreas[i] = -totalArea / 2;
-
-        for (auto p = axis.begin(); p != axis.end(); p++) {
-            splitAreas[i] += (*p)->get_bbox().surface_area();
-            axisSplitPoints[i] = (*p)->get_bbox().centroid()[i];
-            if (splitAreas[i] > 0) {
-                break;
-            }
+    vector<double> extent = {bbox.extent.x ,bbox.extent.y, bbox.extent.y};
+    int splitAxis = (int) (min_element(extent.begin(), extent.end()) - extent.begin());
+    vector<Primitive *> sortedAxis;
+    copy(start, end, back_inserter(sortedAxis));
+    sort(sortedAxis.begin(), sortedAxis.end(), [splitAxis](Primitive *lhs, Primitive *rhs){
+        double lhsAxisValue = lhs->get_bbox().centroid()[splitAxis];
+        double rhsAxisValue = rhs->get_bbox().centroid()[splitAxis];
+        if (lhsAxisValue == rhsAxisValue) {
+            return lhs->get_bbox().surface_area() < rhs->get_bbox().surface_area();
+        } else {
+            return lhs->get_bbox().centroid()[splitAxis] < rhs->get_bbox().centroid()[splitAxis];
         }
-    }
+    });
+    double splitPoint = sortedAxis[size / 2]->get_bbox().centroid()[splitAxis];
 
-
-    int splitAxis = (int) (min_element(splitAreas.begin(), splitAreas.end()) - splitAreas.begin());
-    double splitPoint = axisSplitPoints[splitAxis];
+//    vector<double> splitAreas = {0., 0., 0.};
+//    double axisSplitPoints[] {0., 0., 0.};
+//
+//    // Assuming the probability of intersection is proportional to the
+//    // surface area of the bounding box, we want the split to result in
+//    // maximum entropy reduction. Since we are splitting two ways, that
+//    // means the probability on each side should be as close to 0.5 as
+//    // possible.
+//    for (int i = 0; i < 3; i++) {
+//        vector<Primitive *> axis;
+//        copy(start, end, back_inserter(axis));
+//        sort(axis.begin(), axis.end(), [i](Primitive *lhs, Primitive *rhs){
+//            double lhsAxisValue = lhs->get_bbox().centroid()[i];
+//            double rhsAxisValue = rhs->get_bbox().centroid()[i];
+//            if (lhsAxisValue == rhsAxisValue) {
+//                return lhs->get_bbox().surface_area() < rhs->get_bbox().surface_area();
+//            } else {
+//                return lhs->get_bbox().centroid()[i] < rhs->get_bbox().centroid()[i];
+//            }
+//        });
+//
+//        splitAreas[i] = -totalArea / 2;
+//
+//        for (auto p = axis.begin(); p != axis.end(); p++) {
+//            splitAreas[i] += (*p)->get_bbox().surface_area();
+//            axisSplitPoints[i] = (*p)->get_bbox().centroid()[i];
+//            if (splitAreas[i] > 0) {
+//                break;
+//            }
+//        }
+//    }
+//
+//
+//    int splitAxis = (int) (min_element(splitAreas.begin(), splitAreas.end()) - splitAreas.begin());
+//    double splitPoint = axisSplitPoints[splitAxis];
 
     // Find longest axis for split
 //    Vector3D bboxExtent = bbox.extent;
