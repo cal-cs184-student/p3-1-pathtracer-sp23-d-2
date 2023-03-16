@@ -43,7 +43,7 @@ for (auto p = axis.begin(); p != axis.end(); p++) {
     }
 }
 ```
-  - If the split point is at the start or end, then we know that all primitives lie on only one side of the split point and can return the current node. Otherwise, we create a new node with updated start and end primitives and recursively call construct_bvh on the new Primitie vector.
+  - If the split point is at the start or end, then we know that all primitives lie on only one side of the split point and can return the current node. Otherwise, we create a new node with updated start and end primitives and recursively call construct_bvh on the new Primitive vector.
 
 - **Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.**
     - ```CBbunny.dae```
@@ -62,3 +62,46 @@ for (auto p = axis.begin(); p != axis.end(); p++) {
 
 ### Part 3
 - **Walk through both implementations of the direct lighting function.**
+  - In direct lighting with uniform hemisphere sampling, we estimate the direct lighting on a point by sampling uniformly in a hemisphere. First, we make a coordinate space for the hit point ```hit_p``` in the Z direction, aligned with the surface normal N. Then, we iterate through the total number of pixel samples and generate a random direction of the unit hemisphere with ```hemisphereSampler->get_sample()``` Then, we create a new ray using the hit point and randomly generated direction and check if it intersects with an object by calling ```bvh->intersect```. We keep track of a running sum ```L_out``` of the total lighting emitted and finally return the estimated direct lighting for the hit point by dividing the total sum by the total area of samples: ```L_out / num_samples * PI * 2```.  This formula is derived from the estimator equation: 
+  ![estimator.png](./images/task3/estimator.png)
+  - In  ```PathTracer::estimate_direct_lighting_importance```, we implemented direct lighting with importance sampling lights by sampling all lights directly and tracing the inverse path of the light. First, we iterate through each light source and sample directions between the light source and the hit point ```hit_p```. For each sample in the light source, we calculate the distance to the source light, probability density, radiance, and calculate a new ray from the hit point to the light source to check if an intersection occurs. We use the sample estimation formula above to calculate a running sum L_out of the total light samples, while also accounting for the extra factor of radiance and probability density: ```L_out += isect.bsdf->f(w_out, w_in_object) * radiance * max(0., cos_theta(w_in_object)) / probability_density / num_sample``` and return the result.
+
+- **Show some images rendered with both implementations of the direct lighting function.**
+  - Uniform Hemisphere Sampling:
+  ![CBbunny_H.png](./images/task3/CBbunny_H_16_8.png)
+  - Importance Sampling:
+  ![CBbunny_H.png](./images/task3/CBbunny_H_16_8.png)
+
+- **Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.**
+  - ```l=1:```
+  ![CBbunny_L1.png](./images/task3/CBbunny_L1.png)
+  - ```l=4:```
+  ![CBbunny_L4.png](./images/task3/CBbunny_L4.png)
+  - ```l=16:```
+  ![CBbunny_L16.png](./images/task3/CBbunny_L16.png)
+  - ```l=64:```
+  ![CBbunny_L64.png](./images/task3/CBbunny_L64.png)
+
+- **Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.**
+  - In the image produced by uniform hemisphere sampling, we see that the result is more grainy with increased noise due to the sampling over a uniform hemisphere, which samples directions randomly with uniform probability over a hemisphere. However, in the bunny image produced by importance sampling, the image is much clearer since we include the difference in light directions when sampling and weigh greater probabilities and importance towards surfaces that are hit by a light source, rather than the shadows of the image.
+
+### Part 4
+- **Walk through your implementation of the indirect lighting function.**
+- **Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.**
+  - ```banana.dae:```
+![banana_1024.png](./images/task4/banana_1024.png)
+  - ```blob.dae:```
+  ![blob_1024.png](./images/task4/blob_1024.png)
+  - ```spheres.dae:```
+  ![spheres_1024.png](./images/task4/spheres_1024.png)
+- **Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel.**
+- Direct illumination:
+  ![spheres_direct.png](./images/task4/spheres_direct.png)
+- Indirect illumination:
+  ![spheres_indirect.png](./images/task4/spheres_indirect.png)
+- **For CBbunny.dae, compare rendered views with max_ray_depth set to 0, 1, 2, 3, and 100 (the -m flag). Use 1024 samples per pixel.**
+- **Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.**
+
+### Part 5
+  - **Explain adaptive sampling. Walk through your implementation of the adaptive sampling.**
+  - **Pick two scenes and render them with at least 2048 samples per pixel. Show a good sampling rate image with clearly visible differences in sampling rate over various regions and pixels. Include both your sample rate image, which shows your how your adaptive sampling changes depending on which part of the image you are rendering, and your noise-free rendered result. Use 1 sample per light and at least 5 for max ray depth.**

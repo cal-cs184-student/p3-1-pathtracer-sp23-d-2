@@ -160,6 +160,7 @@ Vector3D PathTracer::at_least_one_bounce_radiance(const Ray &r,
     Vector3D hit_p = r.o + r.d * isect.t;
     Vector3D w_out = w2o * (-r.d);
 
+    // direct
     Vector3D L_out = one_bounce_radiance(r, isect);
 
     // TODO: Part 4, Task 2
@@ -208,8 +209,11 @@ Vector3D PathTracer::est_radiance_global_illumination(const Ray &r) {
 //    return (isect.t == INF_D) ? debug_shading(r.d) : normal_shading(isect.n);
 
     // TODO (Part 3): Return the direct illumination.
-//    return zero_bounce_radiance(r, isect) + one_bounce_radiance(r, isect);
-    return zero_bounce_radiance(r, isect) + at_least_one_bounce_radiance(r, isect);
+    return zero_bounce_radiance(r, isect) + one_bounce_radiance(r, isect);
+    // only direct
+//    return zero_bounce_radiance(r, isect) + at_least_one_bounce_radiance(r, isect);
+  // only indirect
+//    return at_least_one_bounce_radiance(r, isect);
     // TODO (Part 4): Accumulate the "direct" and "indirect"
     // parts of global illumination into L_out rather than just direct
 
