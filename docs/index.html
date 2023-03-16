@@ -1,485 +1,493 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<style>
-  body {
-    background-color: white;
-    padding: 100px;
-    width: 1000px;
-    margin: auto;
-    text-align: left;
-    font-weight: 300;
-    font-family: 'Open Sans', sans-serif;
-    color: #121212;
-  }
-  h1, h2, h3, h4 {
-    font-family: 'Source Sans Pro', sans-serif;
-  }
-  kbd {
-    color: #121212;
-  }
-</style>
-<title>CS 184 Path Tracer</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+<!DOCTYPE html><html><head>
+      <title>index</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////Users/rachellee/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.6.8/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
 
-<script>
-  MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']]
-    }
-  };
-</script>
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-</script>
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
 
-</head>
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
 
 
-<body>
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
 
-<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2023</h1>
-<h1 align="middle">Project 3-1: Path Tracer</h1>
-<h2 align="middle">YOUR NAME(S)</h2>
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
 
-<!-- Add Website URL -->
-<h2 align="middle">Website URL: <a href="TODO">TODO</a></h2>
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
 
-<br><br>
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
 
+code.language-yaml {
+  color: #183691;
+}
 
-<div align="center">
-  <table style="width=100%">
-      <tr>
-          <td align="middle">
-          <img src="images/example_image.png" width="480px" />
-          <figcaption align="middle">Results Caption: my bunny is the bounciest bunny</figcaption>
-      </tr>
-  </table>
-</div>
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
 
-<p>All of the text in your write-up should be <em>in your own words</em>. If you need to add additional HTML features to this document, you can search the <a href="http://www.w3schools.com/">http://www.w3schools.com/</a> website for instructions. To edit the HTML, you can just copy and paste existing chunks and fill in the text and image file names appropriately.</p>
-<o>The website writeup is intended to be a self-contained walkthrough of the assignment: we want this to be a piece of work which showcases your understanding of relevant concepts through both mesh images as well as written explanations about what you did to complete each part of the assignment. Try to be as clear and organized as possible when writing about your own output files or extensions to the assignment. We want to understand what you've achieved and how you've done it!</p> 
-<p>If you are well-versed in web development, feel free to ditch this template and make a better looking page.</p>
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
 
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
 
-<p>Here are a few problems students have encountered in the past. Test your website on the instructional machines early!</p>
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p,html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div{display:inline}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  300px/2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="cs-184-computer-graphics-and-imaging-spring-2023">CS 184: Computer Graphics and Imaging, Spring 2023</h1>
+
+<h2 class="mume-header" id="project-3-1-pathtracer">Project 3-1: PathTracer</h2>
+
+<h2 class="mume-header" id="michael-lin-rachel-lee">Michael Lin, Rachel Lee</h2>
+
+<hr>
+<h3 class="mume-header" id="overview">Overview</h3>
+
+<p>In this project, we generated camera rays by transforming normalized image coordinates from image space to sensors in camera space and then transforming the camera ray into a ray in the world space. We also generated pixel samples and implemented the M&#xF6;ller Trumbore algorithm for calculating ray-triangle intersections. Then, using Bounding Volume Heirarchy acceleration we increased the efficiency of the ray-tracing processes by with efficient axis-splitting heuristics. We also implemented different sampling methods in global illumination such as the Uniform Hemisphere Sampling and Importance Sampling which showed the different efficiencies in sampling methods as well as different lighting methods such as direct and indirect lighting for ray tracing. Finally, we also implemented adaptive sampling which helps concentrate the samples in more difficult parts of an image such as the shadow corners of an object.</p>
+<h3 class="mume-header" id="part-1">Part 1</h3>
+
 <ul>
-<li>Your main report page should be called index.html.</li>
-<li>Be sure to include and turn in all of the other files (such as images) that are linked in your report!</li>
-<li>Use only <em>relative</em> paths to files, such as <pre>"./images/image.jpg"</pre>
-Do <em>NOT</em> use absolute paths, such as <pre>"/Users/student/Desktop/image.jpg"</pre></li>
-<li>Pay close attention to your filename extensions. Remember that on UNIX systems (such as the instructional machines), capitalization matters. <pre>.png != .jpeg != .jpg != .JPG</pre></li>
-<li>Be sure to adjust the permissions on your files so that they are world readable. For more information on this please see this tutorial: <a href="http://www.grymoire.com/Unix/Permissions.html">http://www.grymoire.com/Unix/Permissions.html</a></li>
-<li>And again, test your website on the instructional machines early!</li>
+<li>
+<p><strong>Walk through the ray generation and primitive intersection parts of the rendering pipeline.</strong></p>
+<ul>
+<li>To generate the ray, we first transform the normalized input coordinates <code>(x,y)</code> from the world space to camera space by setting <code>xTransform</code> to <code>x * tan(.5 * radians(hFov)) + (x - 1) * tan(.5 * radians(hFov))</code> and <code>yTransform</code> to  <code>y * tan(.5 * radians(hFov)) + (x - 1) * tan(.5 * radians(hFov))</code>. After transforming the coordinates from image space to sensor in camera space, we then transform the <code>xTransform</code> and <code>yTransform</code> coordinates into the world space by finding the updated direction and multiplying by the camera-to-world rotation matrix <code>c2w</code>. Then, we create and return a new <code>cameraRay</code> using the camera position in the world space <code>pos</code> and updated direction vector while also setting the <code>min_t</code> and <code>max_t</code> of the ray to be within the bounds of the two clipping planes <code>nclip</code> and <code>fclip</code>. After generating the ray and pixel samples using <code>raytrace_pixel</code>, we test whether there is an intersection between the triangle and input ray using the M&#xF6;ller Trumbore algorithm and reporting the location of the nearest intersection point. Finally, we check if the found intersection point is within the triangle&#x2019;s boundaries.</li>
 </ul>
+</li>
+<li>
+<p><strong>Explain the triangle intersection algorithm you implemented in your own words.</strong></p>
+<ul>
+<li>In <code>Triangle::intersect</code> , we implemented the M&#xF6;ller Trumbore algorithm by using linear interpolation to calculate the barycentric coordinates and determine if the intersection point of the ray lies within the triangle. First, we found two edges of the triangle py calculating the difference of <code>p2 - p1</code>and <code>p3 - p1</code> and stored them in <code>e1</code> and <code>e2</code>, respectively. Then we found the distance of <code>p1</code> from the given ray&#x2019;s origin and used it to find the cross product between e1 and store this in <code>s1</code>. We also found the cross product between the ray&#x2019;s direction and <code>e2</code> and store this value in <code>s2</code>. Next, we calculate the inverse of the dot products using: <code>1 / dot(s1, e1) * Vector3D(dot(s2, e2), dot(s1, s0), dot(s2, r.d))</code> and store the result in a <code>Vector3D</code>. Finally, we check that the coordinates of the resulting vector are within the range (0,1) and that the intersection that occurs at t lies within the <code>min_t</code> and <code>max_t</code> of the input array and update <code>max_t</code> if necessary.</li>
+</ul>
+</li>
+<li>
+<p><strong>Show images with normal shading for a few small .dae files.</strong></p>
+<ul>
+<li><code>CBEmpty.dae</code></li>
+<li><img src="./images/CBEmpty.png" alt="CBEmpty.png"></li>
+<li><code>CBSpheres.dae</code></li>
+<li><img src="./images/CBSpheres.png" alt="CBSpheres.png"></li>
+<li><code>banana.dae</code></li>
+<li><img src="./images/banana.png" alt="banana.png"></li>
+</ul>
+</li>
+</ul>
+<h3 class="mume-header" id="part-2">Part 2</h3>
 
+<ul>
+<li><strong>Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.</strong>
+<ul>
+<li>In <code>BVHAccel:construct_bvh</code>, we first compute the bounding box from the given vector of primitives using <code>get_bbox()</code> and initialize a new <code>BVHNode</code> with the bounding box. Then, we check to see if the current node is a leaf node by seeing if there are no more than <code>max_leaf_size</code> primitives in the list, and then update the start and end primitive iterators. If the node is an internal node, then we split the primitives into &#x201C;left&#x201D; and &#x201C;right&#x201D; sections along the longest axis of the bounding box within <code>bbox.extent</code>. After finding the longest axis for the split, we sort the partitions and check if the left and right subtrees are of equal size to help maximize the bushiness of the tree and help create the shortest primitive tree possible. Since we are splitting two ways, that means the probability on each side should be as close to 0.5 as possible:</li>
+</ul>
+</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>sort(axis.begin(), axis.end(), [i](Primitive *lhs, Primitive *rhs){
+            double lhsAxisValue = lhs-&gt;get_bbox().centroid()[i];
+            double rhsAxisValue = rhs-&gt;get_bbox().centroid()[i];
+            if (lhsAxisValue == rhsAxisValue) {
+                return lhs-&gt;get_bbox().surface_area() &lt; rhs-&gt;get_bbox().surface_area();
+            } else {
+                return lhs-&gt;get_bbox().centroid()[i] &lt; rhs-&gt;get_bbox().centroid()[i];
+            }
+        });
+splitAreas[i] = -totalArea / 2;
 
-<p>Here is an example of how to include a simple formula:</p>
-<p align="middle"><pre align="middle">a^2 + b^2 = c^2</pre></p>
-<p>or, alternatively, you can include an SVG image of a LaTex formula.</p>
+for (auto p = axis.begin(); p != axis.end(); p++) {
+    splitAreas[i] += (*p)-&gt;get_bbox().surface_area();
+    axisSplitPoints[i] = (*p)-&gt;get_bbox().centroid()[i];
+    if (splitAreas[i] &gt; 0) {
+        break;
+    }
+}
+</code></pre><ul>
+<li>
+<p>If the split point is at the start or end, then we know that all primitives lie on only one side of the split point and can return the current node. Otherwise, we create a new node with updated start and end primitives and recursively call construct_bvh on the new Primitive vector.</p>
+</li>
+<li>
+<p><strong>Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.</strong></p>
+<ul>
+<li><code>CBbunny.dae</code><br>
+<img src="./images/CBbunny.png" alt="bunny.png"></li>
+<li><code>cow.dae</code><br>
+<img src="./images/cow.png" alt="cow.png"></li>
+<li><code>CBlucy.dae</code><br>
+<img src="./images/CBlucy.png" alt="CBlucy.png"></li>
+</ul>
+</li>
+<li>
+<p><strong>Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.</strong></p>
+<ul>
+<li><strong>Without BVH Acceleration:</strong><br>
+<img src="./images/without_bvh.png" alt="without_bvh.png"></li>
+<li><strong>With BVH Acceleration:</strong><br>
+<img src="./images/with_bvh.png" alt="with_bvh.png"></li>
+<li>Clearly, we can distinguish the difference between the average speed of the million rays/second without BVH acceleration and with BVH acceleration and see that the one processed with BVH acceleration was ~30x faster. The average number of intersection tests per ray also significantly decreased which shows the increased efficiency of the ray-tracing algorithm for identifying which bounding boxes intersect with the ray while also eliminating computation time for rays that do not intersect.</li>
+</ul>
+</li>
+</ul>
+<h3 class="mume-header" id="part-3">Part 3</h3>
 
-<div>
+<ul>
+<li>
+<p><strong>Walk through both implementations of the direct lighting function.</strong></p>
+<ul>
+<li>In direct lighting with uniform hemisphere sampling, we estimate the direct lighting on a point by sampling uniformly in a hemisphere. First, we make a coordinate space for the hit point <code>hit_p</code> in the Z direction, aligned with the surface normal N. Then, we iterate through the total number of pixel samples and generate a random direction of the unit hemisphere with <code>hemisphereSampler-&gt;get_sample()</code> Then, we create a new ray using the hit point and randomly generated direction and check if it intersects with an object by calling <code>bvh-&gt;intersect</code>. We keep track of a running sum <code>L_out</code> of the total lighting emitted and finally return the estimated direct lighting for the hit point by dividing the total sum by the total area of samples: <code>L_out / num_samples * PI * 2</code>.  This formula is derived from the estimator equation:<br>
+<img src="./images/task3/estimator.png" alt="estimator.png"></li>
+<li>In  <code>PathTracer::estimate_direct_lighting_importance</code>, we implemented direct lighting with importance sampling lights by sampling all lights directly and tracing the inverse path of the light. First, we iterate through each light source and sample directions between the light source and the hit point <code>hit_p</code>. For each sample in the light source, we calculate the distance to the source light, probability density, radiance, and calculate a new ray from the hit point to the light source to check if an intersection occurs. We use the sample estimation formula above to calculate a running sum <code>L_out</code> of the total light samples, while also accounting for the extra factor of radiance and probability density: <code>L_out += isect.bsdf-&gt;f(w_out, w_in_object) * radiance * max(0., cos_theta(w_in_object)) / probability_density / num_sample</code> and return the result.</li>
+</ul>
+</li>
+<li>
+<p><strong>Show some images rendered with both implementations of the direct lighting function.</strong></p>
+<ul>
+<li>Uniform Hemisphere Sampling:<br>
+<img src="./images/task3/CBbunny_H_16_8.png" alt="CBbunny_H.png"></li>
+<li>Importance Sampling:<br>
+<img src="./images/task3/CBbunny_H_16_8.png" alt="CBbunny_H.png"></li>
+</ul>
+</li>
+<li>
+<p><strong>Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.</strong></p>
+<ul>
+<li><code>l=1:</code><br>
+<img src="./images/task3/CBbunny_L1.png" alt="CBbunny_L1.png"></li>
+<li><code>l=4:</code><br>
+<img src="./images/task3/CBbunny_L4.png" alt="CBbunny_L4.png"></li>
+<li><code>l=16:</code><br>
+<img src="./images/task3/CBbunny_L16.png" alt="CBbunny_L16.png"></li>
+<li><code>l=64:</code><br>
+<img src="./images/task3/CBbunny_L64.png" alt="CBbunny_L64.png"></li>
+</ul>
+</li>
+<li>
+<p><strong>Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.</strong></p>
+<ul>
+<li>In the image produced by uniform hemisphere sampling, we see that the result is more grainy with increased noise due to the sampling over a uniform hemisphere, which samples directions randomly with uniform probability over a hemisphere. However, in the bunny image produced by importance sampling, the image is much clearer since we include the difference in light directions when sampling and weigh greater probabilities and importance towards surfaces that are hit by a light source, rather than the shadows of the image.</li>
+</ul>
+</li>
+</ul>
+<h3 class="mume-header" id="part-4">Part 4</h3>
 
-<h2 align="middle">Overview</h2>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
+<ul>
+<li><strong>Walk through your implementation of the indirect lighting function.</strong>
+<ul>
+<li>For indirect lighting, we first implement <code>DiffuseBSDF::sample_f</code> which finds a sample for the input solid angle <code>wi</code> and returns the BSDF of the intersection <code>(wo, *wi)</code>. Then, we begin to trace the multi-bounce inverse paths of the light ray and recursively determine whether the next location is a light or an object. In each recursive call, we create a new <code>bounce_ray</code> from the hit point and set its minimum t value and depth. Then, we call <code>bvh-&gt;intersect</code> on the <code>bounce_ray</code> to determine whether there is a ray intersection, in which case we make a recursive call <code>at_least_one_bounce_radiance</code> on existing ray and estimated ray intersection calculated from the estimator equation. Finally, we keep track of the total light emitted in <code>L_out</code> and return the result.</li>
+</ul>
+</li>
+<li><strong>Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.</strong>
+<ul>
+<li><code>banana.dae:</code><br>
+<img src="./images/task4/banana_1024.png" alt="banana_1024.png"></li>
+<li><code>blob.dae:</code><br>
+<img src="./images/task4/blob_1024.png" alt="blob_1024.png"></li>
+<li><code>spheres.dae:</code><br>
+<img src="./images/task4/spheres_1024.png" alt="spheres_1024.png"></li>
+</ul>
+</li>
+<li><strong>Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel.</strong>
+<ul>
+<li>Direct illumination:<br>
+<img src="./images/task4/spheres_direct.png" alt="spheres_direct.png"></li>
+<li>Indirect illumination:<br>
+<img src="./images/task4/spheres_indirect.png" alt="spheres_indirect.png"></li>
+</ul>
+</li>
+<li><strong>For CBbunny.dae, compare rendered views with max_ray_depth set to 0, 1, 2, 3, and 100 (the -m flag). Use 1024 samples per pixel.</strong>
+<ul>
+<li><code>m=0:</code><br>
+<img src="./images/task4/CBbunny_m0.png" alt="CBbunny_m0.png"></li>
+<li><code>m=1:</code><br>
+<img src="./images/task4/CBbunny_m1.png" alt="CBbunny_m1.png"></li>
+<li><code>m=2:</code><br>
+<img src="./images/task4/CBbunny_m2.png" alt="CBbunny_m2.png"></li>
+<li><code>m=3:</code><br>
+<img src="./images/task4/CBbunny_m3.png" alt="CBbunny_m3.png"></li>
+<li><code>m=100:</code><br>
+<img src="./images/task4/CBbunny_m100.png" alt="CBbunny_m100.png"></li>
+</ul>
+</li>
+<li><strong>Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.</strong>
+<ul>
+<li><code>banana.dae where s=1, l=4</code><br>
+<img src="./images/task5/banana_1_4.png" alt="banana_1_4.png"></li>
+<li><code>banana.dae where s=2, l=4</code><br>
+<img src="./images/task5/banana_2_4.png" alt="banana_2_4.png"></li>
+<li><code>banana.dae where s=4, l=4</code><br>
+<img src="./images/task5/banana_4_4.png" alt="banana_4_4.png"></li>
+<li><code>banana.dae where s=8, l=4</code><br>
+<img src="./images/task5/banana_8_4.png" alt="banana_8_4.png"></li>
+<li><code>banana.dae where s=16, l=4</code><br>
+<img src="./images/task5/banana_16_4.png" alt="banana_8_4.png"></li>
+<li><code>banana.dae where s=64, l=4</code><br>
+<img src="./images/task5/banana_64_4.png" alt="banana_8_4.png"></li>
+<li><code>banana.dae where s=1024, l=4</code><br>
+<img src="./images/task5/banana_1024_4.png" alt="banana_1024_4.png"></li>
+</ul>
+</li>
+</ul>
+<h3 class="mume-header" id="part-5">Part 5</h3>
 
-<h2 align="middle">Part 1: Ray Generation and Scene Intersection (20 Points)</h2>
-<!-- Walk through the ray generation and primitive intersection parts of the rendering pipeline.
-Explain the triangle intersection algorithm you implemented in your own words.
-Show images with normal shading for a few small .dae files. -->
+<ul>
+<li>
+<p><strong>Explain adaptive sampling. Walk through your implementation of the adaptive sampling.</strong></p>
+<ul>
+<li>In adaptive sampling, the algorithm uses a fixed high number of samples per pixel and adjusts the sampling rate from the level of detail and difficulty of the image parts. For the implementation, we modified <code>PathTracer::raytrace_pixel</code> so that while iterating through the samples, we check if the current sample number is divisible by the batch size of the sample <code>samplesPerBatch</code>. If this case is true, then we compute the mean and standard deviation of the sample&#x2019;s illuminance <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">{x_k}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>.</li>
+</ul>
+<pre data-role="codeBlock" data-info class="language-"><code>float mu = s1 / i;
+float sig2 = 1.f / (i - 1.f) * (s2 - s1 * s1 / i);
+</code></pre><p>If at any point the illuminance is less than or equal to the <code>maxTolerance * u</code>, then we break from the iteration and can confidently conclude that the pixel has converged. Otherwise, we continue the tracing-and-detecting loop.</p>
+</li>
+<li>
+<p><strong>Pick two scenes and render them with at least 2048 samples per pixel. Show a good sampling rate image with clearly visible differences in sampling rate over various regions and pixels. Include both your sample rate image, which shows your how your adaptive sampling changes depending on which part of the image you are rendering, and your noise-free rendered result. Use 1 sample per light and at least 5 for max ray depth.</strong></p>
+<ul>
+<li><code>banana.dae</code><br>
+<img src="./images/task5/banana_2048.png" alt="banana_2048.png"><br>
+<img src="./images/task5/banana_2048_rate.png" alt="banana_2048_rate.png"></li>
+<li><code>CBspheres_lambertian.dae</code><br>
+<img src="./images/task5/spheres_2048.png" alt="spheres_2048.png"><br>
+<img src="./images/task5/spheres_2048_rate.png" alt="spheres_2048_rate.png"></li>
+</ul>
+</li>
+</ul>
+<h3 class="mume-header" id="conclusion">Conclusion</h3>
 
-<h3>
-  Walk through the ray generation and primitive intersection parts of the rendering pipeline.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
+<p>Overall, the project was a very great learning experience in learning the different sampling methods in ray tracing as well as how light rays are traced in bounce effects of lighting. We split the work so that Michael focused more heavily on the implementation and application of the algorithms while Rachel worked on the conceptual explanations in the report.</p>
 
-<h3>
-  Explain the triangle intersection algorithm you implemented in your own words.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
-
-<h3>
-  Show images with normal shading for a few small .dae files.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example1.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example2.dae</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example3.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example4.dae</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-
-
-<h2 align="middle">Part 2: Bounding Volume Hierarchy (20 Points)</h2>
-<!-- Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.
-Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.
-Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis. -->
-
-<h3>
-  Walk through your BVH construction algorithm. Explain the heuristic you chose for picking the splitting point.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-
-<h3>
-  Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example1.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example2.dae</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example3.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example4.dae</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-
-<h3>
-  Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
-
-<h2 align="middle">Part 3: Direct Illumination (20 Points)</h2>
-<!-- Walk through both implementations of the direct lighting function.
-Show some images rendered with both implementations of the direct lighting function.
-Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.
-Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis. -->
-
-<h3>
-  Walk through both implementations of the direct lighting function.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-
-<h3>
-  Show some images rendered with both implementations of the direct lighting function.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <!-- Header -->
-    <tr align="center">
-      <th>
-        <b>Uniform Hemisphere Sampling</b>
-      </th>
-      <th>
-        <b>Light Sampling</b>
-      </th>
-    </tr>
-    <br>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example1.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example1.dae</figcaption>
-      </td>
-    </tr>
-    <br>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example2.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example2.dae</figcaption>
-      </td>
-    </tr>
-    <br>
-  </table>
-</div>
-<br>
-
-<h3>
-  Focus on one particular scene with at least one area light and compare the noise levels in <b>soft shadows</b> when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, <b>not</b> uniform hemisphere sampling.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="200px"/>
-        <figcaption>1 Light Ray (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="200px"/>
-        <figcaption>4 Light Rays (example1.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="200px"/>
-        <figcaption>16 Light Rays (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="200px"/>
-        <figcaption>64 Light Rays (example1.dae)</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<p>
-    YOUR EXPLANATION GOES HERE
-</p>
-<br>
-
-<h3>
-  Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
-
-
-<h2 align="middle">Part 4: Global Illumination (20 Points)</h2>
-<!-- Walk through your implementation of the indirect lighting function.
-Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
-Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel. (You will have to edit PathTracer::at_least_one_bounce_radiance(...) in your code to generate these views.)
-For CBbunny.dae, compare rendered views with max_ray_depth set to 0, 1, 2, 3, and 100 (the -m flag). Use 1024 samples per pixel.
-Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
-You will probably want to use the instructional machines for the above renders in order to not burn up your own computer for hours. -->
-
-<h3>
-  Walk through your implementation of the indirect lighting function.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
-
-<h3>
-  Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example1.dae</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>example2.dae</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-
-<h3>
-  Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel. (You will have to edit PathTracer::at_least_one_bounce_radiance(...) in your code to generate these views.)
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>Only direct illumination (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>Only indirect illumination (example1.dae)</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-<p>
-    YOUR EXPLANATION GOES HERE
-</p>
-<br>
-
-<h3>
-  For CBbunny.dae, compare rendered views with max_ray_depth set to 0, 1, 2, 3, and 100 (the -m flag). Use 1024 samples per pixel.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>max_ray_depth = 0 (CBbunny.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>max_ray_depth = 1 (CBbunny.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>max_ray_depth = 2 (CBbunny.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>max_ray_depth = 3 (CBbunny.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>max_ray_depth = 100 (CBbunny.dae)</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-<p>
-    YOUR EXPLANATION GOES HERE
-</p>
-<br>
-
-<h3>
-  Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>1 sample per pixel (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>2 samples per pixel (example1.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>4 samples per pixel (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>8 samples per pixel (example1.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>16 samples per pixel (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>64 samples per pixel (example1.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>1024 samples per pixel (example1.dae)</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-<p>
-    YOUR EXPLANATION GOES HERE
-</p>
-<br>
-
-
-<h2 align="middle">Part 5: Adaptive Sampling (20 Points)</h2>
-<!-- Explain adaptive sampling. Walk through your implementation of the adaptive sampling.
-Pick one scene and render it with at least 2048 samples per pixel. Show a good sampling rate image with clearly visible differences in sampling rate over various regions and pixels. Include both your sample rate image, which shows your how your adaptive sampling changes depending on which part of the image you are rendering, and your noise-free rendered result. Use 1 sample per light and at least 5 for max ray depth. -->
-
-<h3>
-  Explain adaptive sampling. Walk through your implementation of the adaptive sampling.
-</h3>
-<p>
-    YOUR RESPONSE GOES HERE
-</p>
-<br>
-
-<h3>
-  Pick two scenes and render them with at least 2048 samples per pixel. Show a good sampling rate image with clearly visible differences in sampling rate over various regions and pixels. Include both your sample rate image, which shows your how your adaptive sampling changes depending on which part of the image you are rendering, and your noise-free rendered result. Use 1 sample per light and at least 5 for max ray depth.
-</h3>
-<!-- Example of including multiple figures -->
-<div align="middle">
-  <table style="width:100%">
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>Rendered image (example1.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>Sample rate image (example1.dae)</figcaption>
-      </td>
-    </tr>
-    <tr align="center">
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>Rendered image (example2.dae)</figcaption>
-      </td>
-      <td>
-        <img src="images/your_file.png" align="middle" width="400px"/>
-        <figcaption>Sample rate image (example2.dae)</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-<br>
-
-
-</body>
-</html>
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>
