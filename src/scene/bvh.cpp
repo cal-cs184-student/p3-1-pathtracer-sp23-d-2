@@ -178,7 +178,7 @@ bool BVHAccel::has_intersection(const Ray &ray, BVHNode *node) const {
         return false;
     }
 
-    // Here we are safe t short circuit
+    // Here we are safe to short circuit
     return has_intersection(ray, node->l) || has_intersection(ray, node->r);
 }
 
