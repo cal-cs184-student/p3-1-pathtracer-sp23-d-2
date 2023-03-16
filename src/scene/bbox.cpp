@@ -13,23 +13,15 @@ bool BBox::intersect(const Ray& r, double& t0, double& t1) const {
     // Implement ray - bounding box intersection test
     // If the ray intersected the bounding box within the range given by
     // t0, t1, update t0 and t1 with the new intersection times.
-    Vector3D tMin, tMax;
+    Vector3D tMin = (min - r.o) / r.d;
+    Vector3D tMax = (max - r.o) / r.d;
+
 
     // Optimization: loop unrolling
-    tMin[0] = (min[0] - r.o[0]) / r.d[0];
-    tMax[0] = (max[0] - r.o[0]) / r.d[0];
-    if (tMin[0] > tMax[0])
-        std::swap(tMin[0], tMax[0]);
-
-    tMin[1] = (min[1] - r.o[1]) / r.d[1];
-    tMax[1] = (max[1] - r.o[1]) / r.d[1];
-    if (tMin[1] > tMax[1])
-        std::swap(tMin[1], tMax[1]);
-
-    tMin[2] = (min[2] - r.o[2]) / r.d[2];
-    tMax[2] = (max[2] - r.o[2]) / r.d[2];
-    if (tMin[2] > tMax[2])
-        std::swap(tMin[2], tMax[2]);
+    for (int i = 0; i < 3; i++) {
+        if (tMin[i] > tMax[i])
+            std::swap(tMin[i], tMax[i]);
+    }
 
     t0 = std::max({tMin.x, tMin.y, tMin.z});
     t1 = std::min({tMax.x, tMax.y, tMax.z});

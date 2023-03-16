@@ -77,7 +77,7 @@ PathTracer::estimate_direct_lighting_hemisphere(const Ray &r,
     for (int i = 0; i < num_samples; i++) {
         const Vector3D w_in = hemisphereSampler->get_sample();
         Ray ray_out = Ray(hit_p, o2w * w_in);
-        ray_out.min_t = EPS_F;
+        ray_out.min_t = EPS_D;
         Intersection isect_out;
         if (bvh->intersect(ray_out, &isect_out))
             L_out += isect.bsdf->f(w_out, w_in) * isect_out.bsdf->get_emission() * max(0., cos_theta(w_in));
@@ -116,13 +116,14 @@ PathTracer::estimate_direct_lighting_importance(const Ray &r,
             Vector3D radiance = light->sample_L(hit_p, &w_in_world, &distance_to_light, &probability_density);
             
             Ray sample_ray = Ray(hit_p, w_in_world);
-            sample_ray.min_t = EPS_F;
+            sample_ray.min_t = EPS_D;
             sample_ray.max_t = distance_to_light;
             Vector3D w_in_object = w2o * w_in_world;
             if (!bvh->has_intersection(sample_ray))
                 L_out += isect.bsdf->f(w_out, w_in_object) * radiance * max(0., cos_theta(w_in_object)) / probability_density / num_sample;
         }
     }
+
 
     return L_out;
 
@@ -175,7 +176,7 @@ Vector3D PathTracer::at_least_one_bounce_radiance(const Ray &r,
         Vector3D radiance = isect.bsdf->sample_f(w_out, &w_in, &probability_density);
 
         Ray bounce_ray = Ray(hit_p, o2w * w_in);
-        bounce_ray.min_t = EPS_F;
+        bounce_ray.min_t = EPS_D;
         bounce_ray.depth = r.depth - 1;
 
         Intersection bounce_ray_isect;
@@ -224,18 +225,32 @@ void PathTracer::raytrace_pixel(size_t x, size_t y) {
     // Modify your implementation to include adaptive sampling.
     // Use the command line parameters "samplesPerBatch" and "maxTolerance"
 
-    int num_samples = ns_aa;          // total samples to evaluate
+    size_t num_samples = ns_aa;          // total samples to evaluate
     Vector2D origin = Vector2D(x, y); // bottom left corner of the pixel
     Vector3D color(0., 0., 0.);
 
-    for (int i = 0; i < num_samples; ++i) {
+    float s1 = 0, s2 = 0;
+    int i;
+
+    for (i = 1; i <= num_samples; ++i) {
         Vector2D sample = origin + gridSampler->get_sample();
         Ray sampleRay = camera->generate_ray((double)sample.x / sampleBuffer.w, (double)sample.y / sampleBuffer.h);
-        color += est_radiance_global_illumination(sampleRay);
+        Vector3D sample_color = est_radiance_global_illumination(sampleRay);
+        color += sample_color;
+        float illum = sample_color.illum();
+        s1 += illum;
+        s2 += illum * illum;
+
+        if (i % samplesPerBatch == 0) {
+            float mu = s1 / i;
+            float sig2 = 1.f / (i - 1.f) * (s2 - s1 * s1 / i);
+            if (1.96f * sqrt(sig2 / i) <= maxTolerance * mu)
+                break;
+        }
     }
 
-    sampleBuffer.update_pixel(color / num_samples, x, y);
-    sampleCountBuffer[x + y * sampleBuffer.w] = num_samples;
+    sampleBuffer.update_pixel(color / i, x, y);
+    sampleCountBuffer[x + y * sampleBuffer.w] = i;
 }
 
 void PathTracer::autofocus(Vector2D loc) {

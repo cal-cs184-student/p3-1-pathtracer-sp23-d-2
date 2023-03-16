@@ -185,7 +185,6 @@ bool BVHAccel::intersect(const Ray &ray, Intersection *i, BVHNode *node) const {
         return hit;
     }
 
-
     // Use bitwise op to prevent short-circuiting
     return intersect(ray, i, node->l) | intersect(ray, i, node->r);
 }
